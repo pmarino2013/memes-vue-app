@@ -4,17 +4,9 @@
 import { ref } from "@vue/reactivity";
 import { onMounted } from "@vue/runtime-core";
 import Gallery from "./components/Gallery.vue";
-
+import memesLoad from "./helpers/fetchApi";
 const memes = ref([]);
 let allMemes = [];
-
-const memesLoad = async () => {
-  const resp = await fetch("https://api.imgflip.com/get_memes");
-  const { data } = await resp.json();
-
-  memes.value = data.memes;
-  allMemes = data.memes;
-};
 
 const filtrarMeme = ({ target }) => {
   memes.value = allMemes.filter((meme) => {
@@ -23,7 +15,10 @@ const filtrarMeme = ({ target }) => {
 };
 
 onMounted(() => {
-  memesLoad();
+  memesLoad().then((respuesta) => {
+    memes.value = respuesta.memes;
+    allMemes = respuesta.memes;
+  });
 });
 </script>
 
